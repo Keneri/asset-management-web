@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   BsCaretUpSquareFill,
   BsCaretDownSquareFill,
@@ -7,41 +7,65 @@ import {
 } from "react-icons/bs";
 import { MdDelete, MdEdit } from "react-icons/md";
 
-import { AssetType } from "../type";
+import { AssetType, RowType } from "../type";
 import { useLazyGetCoinDataQuery } from "../../../shared/services/api/crypto";
 import { useLazyGetDailyStockDataQuery } from "../../../shared/services/api/stock";
 
-type RowType = {
-  asset: AssetType;
-  index: number;
-};
-
-function Row({ asset, index }: RowType) {
-  const [percentage, setPercentage] = useState<string>("0");
-  const [currentValue, setCurrentValue] = useState<string>("0");
+function Row({ assetList, setAssetList, asset, index }: RowType) {
   const [getCoinData, { data: coinData, isLoading: coinDataLoading }] =
     useLazyGetCoinDataQuery();
   const [getStockData, { data: stockData, isLoading: stockDataLoading }] =
     useLazyGetDailyStockDataQuery();
 
+  const fetchData = () => {
+    if (asset.type === "Crypto") getCoinData(asset.symbol);
+    else if (asset.type === "Stock") getStockData(asset.symbol);
+  };
+
   const percentageCalculation = (currentPrice: number, oldPrice: number) => {
     if (!currentPrice || !oldPrice) return;
-    setPercentage((((currentPrice - oldPrice) / oldPrice) * 100).toFixed(2));
+
+    setAssetList(
+      assetList.map((asset: AssetType, i: number) => {
+        if (index === i) {
+          asset.percentageChange = (
+            ((currentPrice - oldPrice) / oldPrice) *
+            100
+          ).toFixed(2);
+        }
+
+        return asset;
+      })
+    );
   };
 
   const currentValueCalculation = (currentPrice: number, quantity: number) => {
     if (!currentPrice || !quantity) return;
-    setCurrentValue(
-      (currentPrice * quantity)
-        .toFixed(2)
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+    setAssetList(
+      assetList.map((asset: AssetType, i: number) => {
+        if (index === i) {
+          asset.currentValue = (currentPrice * quantity)
+            .toFixed(2)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        return asset;
+      })
     );
   };
 
+  const deleteRow = () => {
+    if (index < 0) return;
+
+    const tempAssetList = [...assetList];
+    tempAssetList.splice(index, 1);
+    setAssetList(tempAssetList);
+  };
+
   useEffect(() => {
-    if (asset.type === "Crypto") getCoinData(asset.symbol);
-    else if (asset.type === "Stock") getStockData(asset.symbol);
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -52,7 +76,7 @@ function Row({ asset, index }: RowType) {
     const priceChange24H = coinData.market_data.price_change_24h;
 
     percentageCalculation(currentPrice, currentPrice - priceChange24H);
-    currentValueCalculation(currentPrice, asset.quantity);
+    currentValueCalculation(currentPrice, Number(asset.quantity));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coinData, coinDataLoading]);
 
@@ -70,7 +94,7 @@ function Row({ asset, index }: RowType) {
       ]["4. close"];
 
     percentageCalculation(currentPrice, oldPrice);
-    currentValueCalculation(currentPrice, asset.quantity);
+    currentValueCalculation(currentPrice, Number(asset.quantity));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stockData, stockDataLoading]);
 
@@ -83,7 +107,7 @@ function Row({ asset, index }: RowType) {
         {coinDataLoading || stockDataLoading ? (
           <div className="skeleton h-4 w-24"></div>
         ) : (
-          currentValue
+          asset.currentValue
         )}
       </td>
       <td>
@@ -92,12 +116,12 @@ function Row({ asset, index }: RowType) {
             <div className="skeleton h-4 w-24"></div>
           ) : (
             <>
-              {Number(percentage) > 0 ? (
+              {Number(asset.percentageChange) > 0 ? (
                 <BsCaretUpSquareFill
                   size={16}
                   className="mr-2 text-green-500 fill-current"
                 />
-              ) : Number(percentage) < 0 ? (
+              ) : Number(asset.percentageChange) < 0 ? (
                 <BsCaretDownSquareFill
                   size={16}
                   className="mr-2 text-red-500 fill-current"
@@ -105,7 +129,7 @@ function Row({ asset, index }: RowType) {
               ) : (
                 <BsDashSquareFill size={16} className="mr-2" />
               )}
-              {Math.abs(Number(percentage))}
+              {Math.abs(Number(asset.percentageChange))}
             </>
           )}
         </div>
@@ -113,14 +137,14 @@ function Row({ asset, index }: RowType) {
       <td>
         <ul className="menu menu-horizontal menu-xs p-0 min-w-16">
           <li>
-            <a href="_">
+            <button onClick={() => {}}>
               <MdEdit size={16} />
-            </a>
+            </button>
           </li>
           <li>
-            <a href="_">
+            <button onClick={deleteRow}>
               <MdDelete size={16} />
-            </a>
+            </button>
           </li>
         </ul>
       </td>

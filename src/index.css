@@ -26,19 +26,3 @@ code {
   /*Chrome, Safari, Edge*/
   display: none;
 }
-
-table thead tr th:first-of-type {
-  @apply sm:rounded-tl-lg;
-}
-
-table thead tr th:last-of-type {
-  @apply sm:rounded-tr-lg;
-}
-
-table tbody tr:last-of-type td:first-of-type {
-    @apply sm:rounded-bl-lg;
-}
-
-table tbody tr:last-of-type td:last-of-type {
-    @apply sm:rounded-br-lg;
-}

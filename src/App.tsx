@@ -4,43 +4,43 @@ import NavBar from "./components/navbar";
 import Table from "./components/table";
 import Modal from "./components/right-drawer";
 
-import { useLazyGetCoinDataQuery } from "./shared/services/api/crypto";
-import { useLazyGetDailyStockDataQuery } from "./shared/services/api/stock";
+// import { useLazyGetCoinDataQuery } from "./shared/services/api/crypto";
+// import { useLazyGetDailyStockDataQuery } from "./shared/services/api/stock";
 
 const MOCK_ASSET_DATA = [
   {
     name: "Bitcoin",
     type: "Crypto",
     symbol: "bitcoin",
-    quantity: 20.324123123,
-    currentValue: 100000,
-    percentageChange: 23,
+    quantity: "20.324123",
+    currentValue: "100000",
+    percentageChange: "23",
   },
   {
     name: "Apple",
     type: "Stock",
     symbol: "AAPL",
-    quantity: 15,
-    currentValue: 10000,
-    percentageChange: 15,
+    quantity: "15",
+    currentValue: "0",
+    percentageChange: "0",
   },
   {
     name: "Ethereum",
     type: "Crypto",
     symbol: "ethereum",
-    quantity: 25,
-    currentValue: 50000,
-    percentageChange: 7,
+    quantity: "25",
+    currentValue: "50000",
+    percentageChange: "7",
   },
 ];
 
 function App() {
-  const [cryptoList, setCryptoList] = useState([]);
+  // const [cryptoList, setCryptoList] = useState([]);
   const [assetList, setAssetList] = useState(MOCK_ASSET_DATA);
-  const [getCoinData, { data: coinData, isLoading: coinDataLoading }] =
-    useLazyGetCoinDataQuery();
-  const [getStockData, { data: stockData, isLoading: stockDataLoading }] =
-    useLazyGetDailyStockDataQuery();
+  // const [getCoinData, { data: coinData, isLoading: coinDataLoading }] =
+  //   useLazyGetCoinDataQuery();
+  // const [getStockData, { data: stockData, isLoading: stockDataLoading }] =
+  //   useLazyGetDailyStockDataQuery();
 
   const openModal = () =>
     (document.getElementById("generic-modal") as HTMLDialogElement).showModal();
@@ -52,17 +52,17 @@ function App() {
     // getStockData({ symbol: "ibm" });
   }, []);
 
-  useEffect(() => {
-    if (!coinData || coinDataLoading === true) return;
+  // useEffect(() => {
+  //   if (!coinData || coinDataLoading === true) return;
 
-    console.log(coinData);
-  }, [coinData, coinDataLoading]);
+  //   console.log(coinData);
+  // }, [coinData, coinDataLoading]);
 
-  useEffect(() => {
-    if (!stockData || stockDataLoading === true) return;
+  // useEffect(() => {
+  //   if (!stockData || stockDataLoading === true) return;
 
-    console.log(stockData);
-  }, [stockData, stockDataLoading]);
+  //   console.log(stockData);
+  // }, [stockData, stockDataLoading]);
 
   return (
     <div>
@@ -77,7 +77,7 @@ function App() {
             <FaPlus size={16} />
           </button>
         </div>
-        <Table assetList={assetList} />
+        <Table assetList={assetList} setAssetList={setAssetList} />
       </div>
       <Modal />
     </div>

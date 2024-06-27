@@ -2,9 +2,15 @@ import Row from "./row";
 
 import { TableComponentType } from "./type";
 
-function Table({ assetList }: TableComponentType) {
+function Table({ assetList, setAssetList }: TableComponentType) {
   const rows = assetList.map((asset, index) => (
-    <Row asset={asset} index={index} key={index} />
+    <Row
+      assetList={assetList}
+      setAssetList={setAssetList}
+      asset={asset}
+      index={index}
+      key={index}
+    />
   ));
 
   return (

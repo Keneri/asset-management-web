@@ -2,13 +2,19 @@ type AssetType = {
   name: string;
   type: string;
   symbol: string;
-  quantity: number;
-  currentValue: number;
-  percentageChange: number;
+  quantity: string;
+  currentValue: string;
+  percentageChange: string;
 };
 
 type TableComponentType = {
   assetList: AssetType[];
+  setAssetList: (assetList: AssetType[]) => void;
 };
 
-export type { AssetType, TableComponentType };
+interface RowType extends TableComponentType {
+  asset: AssetType;
+  index: number;
+}
+
+export type { AssetType, TableComponentType, RowType };
