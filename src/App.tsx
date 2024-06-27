@@ -12,9 +12,9 @@ const MOCK_ASSET_DATA = [
     name: "Bitcoin",
     type: "Crypto",
     symbol: "bitcoin",
-    quantity: "20.324123",
-    currentValue: "100000",
-    percentageChange: "23",
+    quantity: "20",
+    currentValue: "0",
+    percentageChange: "0",
   },
   {
     name: "Apple",
@@ -29,8 +29,8 @@ const MOCK_ASSET_DATA = [
     type: "Crypto",
     symbol: "ethereum",
     quantity: "25",
-    currentValue: "50000",
-    percentageChange: "7",
+    currentValue: "0",
+    percentageChange: "0",
   },
 ];
 
@@ -41,9 +41,9 @@ function App() {
   const [assetList, setAssetList] = useState<AssetListType[]>(MOCK_ASSET_DATA);
 
   const openModal = () =>
-    (document.getElementById("generic-modal") as HTMLDialogElement).showModal();
+    (document.getElementById("add-modal") as HTMLDialogElement).showModal();
   const closeModal = () =>
-    (document.getElementById("generic-modal") as HTMLDialogElement).close();
+    (document.getElementById("add-modal") as HTMLDialogElement).close();
 
   return (
     <div data-theme={theme}>
@@ -61,6 +61,7 @@ function App() {
         <Table assetList={assetList} setAssetList={setAssetList} />
       </div>
       <Modal
+        modalId="add-modal"
         child={
           <AddAsset
             assetList={assetList}

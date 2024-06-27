@@ -10,12 +10,23 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import { AssetType, RowType } from "../type";
 import { useLazyGetCoinDataQuery } from "../../../shared/services/api/crypto";
 import { useLazyGetDailyStockDataQuery } from "../../../shared/services/api/stock";
+import Modal from "../../modal";
+import UpdateAsset from "../../update-asset";
 
 function Row({ assetList, setAssetList, asset, index }: RowType) {
   const [getCoinData, { data: coinData, isLoading: coinDataLoading }] =
     useLazyGetCoinDataQuery();
   const [getStockData, { data: stockData, isLoading: stockDataLoading }] =
     useLazyGetDailyStockDataQuery();
+
+  const openModal = () =>
+    (
+      document.getElementById(`update-modal-${asset.name}`) as HTMLDialogElement
+    ).showModal();
+  const closeModal = () =>
+    (
+      document.getElementById(`update-modal-${asset.name}`) as HTMLDialogElement
+    ).close();
 
   const fetchData = () => {
     if (asset.type === "Crypto") getCoinData(asset.symbol);
@@ -65,7 +76,6 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
   };
 
   useEffect(() => {
-    console.log("asset:" + asset.name);
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -79,7 +89,7 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
     percentageCalculation(currentPrice, currentPrice - priceChange24H);
     currentValueCalculation(currentPrice, Number(asset.quantity));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coinData, coinDataLoading]);
+  }, [coinData, coinDataLoading, asset.quantity]);
 
   useEffect(() => {
     if (!stockData || stockDataLoading === true || stockData["Information"])
@@ -97,7 +107,7 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
     percentageCalculation(currentPrice, oldPrice);
     currentValueCalculation(currentPrice, Number(asset.quantity));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stockData, stockDataLoading]);
+  }, [stockData, stockDataLoading, asset.quantity]);
 
   return (
     <tr key={index}>
@@ -138,7 +148,7 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
       <td>
         <ul className="menu menu-horizontal menu-xs p-0 min-w-16">
           <li>
-            <button onClick={() => {}}>
+            <button onClick={openModal}>
               <MdEdit size={16} />
             </button>
           </li>
@@ -148,6 +158,17 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
             </button>
           </li>
         </ul>
+        <Modal
+          modalId={`update-modal-${asset.name}`}
+          child={
+            <UpdateAsset
+              asset={asset}
+              assetList={assetList}
+              setAssetList={setAssetList}
+              closeModal={closeModal}
+            />
+          }
+        />
       </td>
     </tr>
   );
