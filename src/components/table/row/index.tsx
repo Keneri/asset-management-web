@@ -19,7 +19,7 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
 
   const fetchData = () => {
     if (asset.type === "Crypto") getCoinData(asset.symbol);
-    // else if (asset.type === "Stocks") getStockData(asset.symbol);
+    else if (asset.type === "Stocks") getStockData(asset.symbol);
   };
 
   const percentageCalculation = (currentPrice: number, oldPrice: number) => {

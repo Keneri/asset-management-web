@@ -121,18 +121,18 @@ function AddAsset({ assetList, setAssetList, closeModal }: AddAssetType) {
     if (searchValue.length < 3) return;
 
     if (assetType === "Stocks") {
-      // getSearchedStockList(searchValue);
-      setSearchedData(
-        MOCK_STOCK_SEARCH.bestMatches.map(
-          (data: StockBestMatchesType, index) => (
-            <ListItem
-              key={index}
-              symbol={data["1. symbol"]}
-              name={data["2. name"]}
-            />
-          )
-        )
-      );
+      getSearchedStockList(searchValue);
+      // setSearchedData(
+      //   MOCK_STOCK_SEARCH.bestMatches.map(
+      //     (data: StockBestMatchesType, index) => (
+      //       <ListItem
+      //         key={index}
+      //         symbol={data["1. symbol"]}
+      //         name={data["2. name"]}
+      //       />
+      //     )
+      //   )
+      // );
     } else {
       const regex = new RegExp(
         searchValue.toLowerCase().replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"),
