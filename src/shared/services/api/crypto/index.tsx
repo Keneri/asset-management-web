@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { GetCryptoListResponseType } from "./types";
 
 const apiKeyString = `x_cg_api_key=${process.env.REACT_APP_COIN_GECKO_API_KEY}`;
 
@@ -15,7 +16,7 @@ export const cryptoApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    getCryptoList: builder.query<any, void>({
+    getCryptoList: builder.query<GetCryptoListResponseType, void>({
       query: () => ({
         url: `coins/list?${apiKeyString}`,
         method: "GET",

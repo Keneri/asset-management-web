@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import NavBar from "./components/navbar";
 import Table from "./components/table";
-import Modal from "./components/right-drawer";
+import Modal from "./components/modal";
+import AddAsset from "./components/add-asset";
 
-// import { useLazyGetCoinDataQuery } from "./shared/services/api/crypto";
-// import { useLazyGetDailyStockDataQuery } from "./shared/services/api/stock";
+import { AssetListType } from "./type";
 
 const MOCK_ASSET_DATA = [
   {
@@ -18,7 +18,7 @@ const MOCK_ASSET_DATA = [
   },
   {
     name: "Apple",
-    type: "Stock",
+    type: "Stocks",
     symbol: "AAPL",
     quantity: "15",
     currentValue: "0",
@@ -35,38 +35,19 @@ const MOCK_ASSET_DATA = [
 ];
 
 function App() {
-  // const [cryptoList, setCryptoList] = useState([]);
-  const [assetList, setAssetList] = useState(MOCK_ASSET_DATA);
-  // const [getCoinData, { data: coinData, isLoading: coinDataLoading }] =
-  //   useLazyGetCoinDataQuery();
-  // const [getStockData, { data: stockData, isLoading: stockDataLoading }] =
-  //   useLazyGetDailyStockDataQuery();
+  const [theme, setTheme] = useState<string>(
+    localStorage.getItem("theme") || "light"
+  );
+  const [assetList, setAssetList] = useState<AssetListType[]>(MOCK_ASSET_DATA);
 
   const openModal = () =>
     (document.getElementById("generic-modal") as HTMLDialogElement).showModal();
-
-  useEffect(() => {
-    // { coinId: "bitcoin", currency: "usd", days: 1 }
-    // getCoinData("bitcoin");
-    // getCoinData("ethereum");
-    // getStockData({ symbol: "ibm" });
-  }, []);
-
-  // useEffect(() => {
-  //   if (!coinData || coinDataLoading === true) return;
-
-  //   console.log(coinData);
-  // }, [coinData, coinDataLoading]);
-
-  // useEffect(() => {
-  //   if (!stockData || stockDataLoading === true) return;
-
-  //   console.log(stockData);
-  // }, [stockData, stockDataLoading]);
+  const closeModal = () =>
+    (document.getElementById("generic-modal") as HTMLDialogElement).close();
 
   return (
-    <div>
-      <NavBar />
+    <div data-theme={theme}>
+      <NavBar setTheme={setTheme} />
       <div className="mx-4 my-8">
         <div className="mb-4 flex justify-between items-center">
           <h2 className="text-2xl">Assets</h2>
@@ -79,7 +60,15 @@ function App() {
         </div>
         <Table assetList={assetList} setAssetList={setAssetList} />
       </div>
-      <Modal />
+      <Modal
+        child={
+          <AddAsset
+            assetList={assetList}
+            setAssetList={setAssetList}
+            closeModal={closeModal}
+          />
+        }
+      />
     </div>
   );
 }

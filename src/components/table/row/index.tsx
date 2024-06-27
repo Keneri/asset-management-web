@@ -19,7 +19,7 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
 
   const fetchData = () => {
     if (asset.type === "Crypto") getCoinData(asset.symbol);
-    else if (asset.type === "Stock") getStockData(asset.symbol);
+    // else if (asset.type === "Stocks") getStockData(asset.symbol);
   };
 
   const percentageCalculation = (currentPrice: number, oldPrice: number) => {
@@ -65,6 +65,7 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
   };
 
   useEffect(() => {
+    console.log("asset:" + asset.name);
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
