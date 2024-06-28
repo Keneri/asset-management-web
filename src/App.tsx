@@ -4,6 +4,7 @@ import NavBar from "./components/navbar";
 import Table from "./components/table";
 import Modal from "./components/modal";
 import AddAsset from "./components/add-asset";
+import LineChart from "./components/chart";
 
 import { AssetListType } from "./type";
 
@@ -20,7 +21,7 @@ const MOCK_ASSET_DATA = [
     name: "Apple",
     type: "Stocks",
     symbol: "AAPL",
-    quantity: "15",
+    quantity: "152",
     currentValue: "0",
     percentageChange: "0",
   },
@@ -48,7 +49,7 @@ function App() {
   return (
     <div data-theme={theme}>
       <NavBar setTheme={setTheme} />
-      <div className="mx-4 my-8">
+      <div className="mx-6 my-8">
         <div className="mb-4 flex justify-between items-center">
           <h2 className="text-2xl">Assets</h2>
           <button
@@ -59,6 +60,7 @@ function App() {
           </button>
         </div>
         <Table assetList={assetList} setAssetList={setAssetList} />
+        <LineChart />
       </div>
       <Modal
         modalId="add-modal"

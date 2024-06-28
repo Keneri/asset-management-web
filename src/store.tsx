@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { stockApi } from "./shared/services/api/stock";
 import { cryptoApi } from "./shared/services/api/crypto";
+import chartReducer from "./shared/services/slices/chart";
 
 const rootReducer = combineReducers({
+  chart: chartReducer,
   [stockApi.reducerPath]: stockApi.reducer,
   [cryptoApi.reducerPath]: cryptoApi.reducer,
 });

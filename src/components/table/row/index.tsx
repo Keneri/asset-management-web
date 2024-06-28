@@ -1,21 +1,35 @@
 import moment from "moment";
 import { useEffect } from "react";
+import { MdDelete, MdEdit } from "react-icons/md";
 import {
   BsCaretUpSquareFill,
   BsCaretDownSquareFill,
   BsDashSquareFill,
 } from "react-icons/bs";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { FaChartArea } from "react-icons/fa";
 
-import { AssetType, RowType } from "../type";
-import { useLazyGetCoinDataQuery } from "../../../shared/services/api/crypto";
-import { useLazyGetDailyStockDataQuery } from "../../../shared/services/api/stock";
 import Modal from "../../modal";
 import UpdateAsset from "../../update-asset";
 
+import { AssetType, RowType } from "../type";
+import { useAppDispatch } from "../../../shared/hooks/redux-hook";
+import {
+  useLazyGetCoinDataQuery,
+  useLazyGetDailyCoinDataQuery,
+} from "../../../shared/services/api/crypto";
+import { useLazyGetDailyStockDataQuery } from "../../../shared/services/api/stock";
+import {
+  setChartName,
+  setChartData,
+  setChartLabel,
+} from "../../../shared/services/slices/chart";
+
 function Row({ assetList, setAssetList, asset, index }: RowType) {
+  const dispatch = useAppDispatch();
   const [getCoinData, { data: coinData, isLoading: coinDataLoading }] =
     useLazyGetCoinDataQuery();
+  const [getDailyCoinData, { data: dailyCoinData }] =
+    useLazyGetDailyCoinDataQuery();
   const [getStockData, { data: stockData, isLoading: stockDataLoading }] =
     useLazyGetDailyStockDataQuery();
 
@@ -29,8 +43,10 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
     ).close();
 
   const fetchData = () => {
-    if (asset.type === "Crypto") getCoinData(asset.symbol);
-    else if (asset.type === "Stocks") getStockData(asset.symbol);
+    if (asset.type === "Crypto") {
+      getCoinData(asset.symbol);
+      getDailyCoinData(asset.symbol);
+    } else if (asset.type === "Stocks") getStockData(asset.symbol);
   };
 
   const percentageCalculation = (currentPrice: number, oldPrice: number) => {
@@ -61,7 +77,6 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
-
         return asset;
       })
     );
@@ -73,6 +88,33 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
     const tempAssetList = [...assetList];
     tempAssetList.splice(index, 1);
     setAssetList(tempAssetList);
+  };
+
+  const onChartClick = () => {
+    if (!(stockData || (coinData && dailyCoinData))) return;
+
+    dispatch(setChartName(asset.name));
+
+    if (asset.type === "Stocks") {
+      const chartLabel = Object.keys(
+        stockData["Time Series (Daily)"]
+      ).reverse();
+      const chartData = chartLabel.map(
+        (label) => stockData["Time Series (Daily)"][label]["4. close"]
+      );
+
+      dispatch(setChartLabel(chartLabel));
+      dispatch(setChartData(chartData));
+    } else if (asset.type === "Crypto") {
+      const chartLabel = dailyCoinData.prices.map((arr: [number, number]) =>
+        moment(arr[0]).format("YYYY-MM-DD")
+      );
+      const chartData = dailyCoinData.prices.map(
+        (arr: [number, number]) => arr[1]
+      );
+      dispatch(setChartLabel(chartLabel));
+      dispatch(setChartData(chartData));
+    }
   };
 
   useEffect(() => {
@@ -146,7 +188,12 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
         </div>
       </td>
       <td>
-        <ul className="menu menu-horizontal menu-xs p-0 min-w-16">
+        <ul className="menu menu-horizontal menu-xs p-0 min-w-24">
+          <li>
+            <button onClick={onChartClick}>
+              <FaChartArea size={16} />
+            </button>
+          </li>
           <li>
             <button onClick={openModal}>
               <MdEdit size={16} />

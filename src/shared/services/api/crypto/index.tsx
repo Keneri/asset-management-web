@@ -28,7 +28,17 @@ export const cryptoApi = createApi({
         method: "GET",
       }),
     }),
+    getDailyCoinData: builder.query<any, string>({
+      query: (coinId) => ({
+        url: `coins/${coinId}/market_chart?vs_currency=usd&days=100`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetCryptoListQuery, useLazyGetCoinDataQuery } = cryptoApi;
+export const {
+  useGetCryptoListQuery,
+  useLazyGetCoinDataQuery,
+  useLazyGetDailyCoinDataQuery,
+} = cryptoApi;
