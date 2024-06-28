@@ -44,3 +44,9 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Thoughts on the application creation
+
+I had a really fun time creating these components and the webpage itself, along with researching and learning to use libraries like DaisyUI and React ChartJS. I also got to learn alot about the CoinGecko and AlphaVantage API usages and limitations which I felt like was great knowledge to have.
+
+Overall, I felt that the application coding process and creation was great and I had a good time.
