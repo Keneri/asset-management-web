@@ -137,14 +137,10 @@ function Row({ assetList, setAssetList, asset, index }: RowType) {
     if (!stockData || stockDataLoading === true || stockData["Information"])
       return;
 
-    const currentPrice =
-      stockData["Time Series (Daily)"][
-        moment().subtract(1, "days").format("YYYY-MM-DD").toString()
-      ]["4. close"];
-    const oldPrice =
-      stockData["Time Series (Daily)"][
-        moment().subtract(2, "days").format("YYYY-MM-DD").toString()
-      ]["4. close"];
+    const dates = Object.keys(stockData["Time Series (Daily)"]);
+
+    const currentPrice = stockData["Time Series (Daily)"][dates[0]]["4. close"];
+    const oldPrice = stockData["Time Series (Daily)"][dates[1]]["4. close"];
 
     percentageCalculation(currentPrice, oldPrice);
     currentValueCalculation(currentPrice, Number(asset.quantity));
