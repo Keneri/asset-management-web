@@ -39,6 +39,12 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+## Additional Information
+
+You are required to create a .env file in the main project folder to run the application along with the two environment variables `REACT_APP_ALPHA_VANTAGE_API_KEY` and `REACT_APP_COIN_GECKO_API_KEY` as well as their corresponding API keys.
+Free Alpha Vantage API key: https://www.alphavantage.co/support/#api-key
+FREE Coingecko API key: https://docs.coingecko.com/reference/setting-up-your-api-key
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
